@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NovaMind AI — Презентація</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #050810;
+    --surface: #0d1220;
+    --accent: #00f5c4;
+    --accent2: #7b5cff;
+    --accent3: #ff4f7b;
+    --text: #e8f0ff;
+    --muted: #5a6a8a;
+    --gold: #ffd700;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ===== STARS BACKGROUND ===== */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 48px;
+    backdrop-filter: blur(12px);
+    background: rgba(5, 8, 16, 0.7);
+    border-bottom: 1px solid rgba(0, 245, 196, 0.1);
+  }
+
+  .nav-logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0,245,196,0.5);
+  }
+
+  .nav-dots {
+    display: flex; gap: 10px;
+  }
+
+  .nav-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+
+  .nav-dot.active { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  /* ===== SLIDES ===== */
+  .slide {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    padding: 100px 48px 80px;
+    overflow: hidden;
+  }
+
+  /* ===== SLIDE 1 — HERO ===== */
+  #slide-1 {
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 0.8s 0.15s ease both;
+    margin-bottom: 24px;
+  }
+
+  .hero-sub {
+    font-size: 1.25rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    text-shadow: 0 0 30px rgba(0,245,196,0.4);
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,245,196,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  /* ===== SLIDE 2 — ПРОБЛЕМА ===== */
+  #slide-2 { flex-direction: column; }
+
+  .slide-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  .slide-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 48px;
+    line-height: 1.1;
+  }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,79,123,0.2);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .problem-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent3);
+  }
+
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent3), transparent);
+  }
+
+  .problem-icon { font-size: 2.5rem; margin-bottom: 16px; }
+  .problem-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+  .problem-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+
+  /* ===== SLIDE 3 — РІШЕННЯ ===== */
+  #slide-3 { flex-direction: column; align-items: center; }
+
+  .solution-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 1000px;
+    align-items: center;
+  }
+
+  .solution-text .slide-title { margin-bottom: 24px; }
+
+  .solution-features { list-style: none; }
+
+  .solution-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(0,245,196,0.1);
+    border: 1px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .solution-visual {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 360px;
+    width: 100%;
+  }
+
+  .orbit {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(123,92,255,0.3);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin linear infinite;
+  }
+
+  .orbit-1 { width: 120px; height: 120px; animation-duration: 8s; border-color: rgba(0,245,196,0.4); }
+  .orbit-2 { width: 220px; height: 220px; animation-duration: 14s; animation-direction: reverse; }
+  .orbit-3 { width: 320px; height: 320px; animation-duration: 20s; }
+
+  .orbit-dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    top: -5px; left: 50%; transform: translateX(-50%);
+  }
+
+  .orbit-1 .orbit-dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .orbit-2 .orbit-dot { background: var(--accent2); box-shadow: 0 0 10px var(--accent2); }
+  .orbit-3 .orbit-dot { background: var(--accent3); box-shadow: 0 0 10px var(--accent3); }
+
+  .core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent2), #3d1f99);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 0 40px rgba(123,92,255,0.5);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  /* ===== SLIDE 4 — ПРОДУКТИ ===== */
+  #slide-4 { flex-direction: column; align-items: center; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    width: 100%;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 32px 28px;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-card.featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 40px rgba(0,245,196,0.1);
+  }
+
+  .product-card.featured::after {
+    content: '★ ТОП';
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+
+  .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+  .product-icon {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+  }
+
+  .product-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .product-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .product-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== SLIDE 5 — РИНОК / ЦИФРИ ===== */
+  #slide-5 { flex-direction: column; }
+
+  .big-numbers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    width: 100%;
+    margin-bottom: 48px;
+  }
+
+  .big-num-card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid rgba(255,255,255,0.07);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .big-num-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,245,196,0.05), transparent);
+  }
+
+  .big-num {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--accent), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+  }
+
+  .big-num-label {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* ===== SLIDE 6 — КОМАНДА ===== */
+  #slide-6 { flex-direction: column; align-items: center; }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .team-card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: transform 0.3s;
+  }
+
+  .team-card:hover { transform: translateY(-4px); }
+
+  .team-avatar {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    font-size: 2rem;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid;
+  }
+
+  .team-card:nth-child(1) .team-avatar { background: rgba(0,245,196,0.1); border-color: var(--accent); }
+  .team-card:nth-child(2) .team-avatar { background: rgba(123,92,255,0.1); border-color: var(--accent2); }
+  .team-card:nth-child(3) .team-avatar { background: rgba(255,79,123,0.1); border-color: var(--accent3); }
+  .team-card:nth-child(4) .team-avatar { background: rgba(255,215,0,0.1); border-color: var(--gold); }
+
+  .team-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .team-role { font-size: 0.8rem; color: var(--muted); }
+
+  /* ===== SLIDE 7 — ROADMAP ===== */
+  #slide-7 { flex-direction: column; align-items: center; }
+
+  .roadmap {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .roadmap-item {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+
+  .roadmap-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .roadmap-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    flex-shrink: 0;
+    margin-top: 4px;
+    transition: background 0.3s;
+    z-index: 1;
+  }
+
+  .roadmap-item.done .roadmap-dot {
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  .roadmap-line {
+    width: 2px;
+    flex: 1;
+    background: linear-gradient(to bottom, rgba(0,245,196,0.3), rgba(0,245,196,0.05));
+    margin: 4px 0;
+  }
+
+  .roadmap-content {
+    padding-bottom: 32px;
+  }
+
+  .roadmap-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .roadmap-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .roadmap-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+  /* ===== SLIDE 8 — ПРО МЕНЕ ===== */
+  #slide-8 {
+    flex-direction: column;
+    align-items: center;
+    background: radial-gradient(ellipse at center, rgba(123,92,255,0.08) 0%, transparent 60%);
+  }
+
+  .about-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 60px;
+    max-width: 900px;
+    align-items: center;
+  }
+
+  .about-avatar {
+    width: 200px; height: 200px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(0,245,196,0.2), rgba(123,92,255,0.2));
+    border: 1px solid rgba(0,245,196,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 0 60px rgba(0,245,196,0.1);
+  }
+
+  .about-avatar::after {
+    content: 'CEO';
+    position: absolute;
+    bottom: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 100px;
+  }
+
+  .about-name {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+
+  .about-title-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent2);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .about-desc {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    margin-bottom: 28px;
+  }
+
+  .about-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .chip {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .chip-green { background: rgba(0,245,196,0.1); border: 1px solid rgba(0,245,196,0.3); color: var(--accent); }
+  .chip-purple { background: rgba(123,92,255,0.1); border: 1px solid rgba(123,92,255,0.3); color: var(--accent2); }
+  .chip-pink { background: rgba(255,79,123,0.1); border: 1px solid rgba(255,79,123,0.3); color: var(--accent3); }
+  .chip-gold { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); color: var(--gold); }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 200;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  /* ===== DIVIDERS ===== */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,245,196,0.2), transparent);
+    margin: 0;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.8; }
+  }
+
+  @keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .solution-wrap { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-wrap { grid-template-columns: 1fr; text-align: center; }
+    .about-avatar { margin: 0 auto; }
+    .big-numbers { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<div class="progress-bar" id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NovaMind<span style="color:var(--text)">AI</span></div>
+  <div class="nav-dots">
+    <button class="nav-dot active" onclick="scrollToSlide(0)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(1)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(2)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(3)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(4)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(5)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(6)"></button>
+    <button class="nav-dot" onclick="scrollToSlide(7)"></button>
+  </div>
+</nav>
+
+<!-- SLIDE 1: HERO -->
+<section class="slide" id="slide-1">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">🚀 Стартап року 2025</div>
+  <h1 class="hero-title">NovaMind AI</h1>
+  <p class="hero-sub">Штучний інтелект, що перетворює будь-який бізнес на машину по заробітку грошей. Ми не просто технологія — ми твоя нова надпотужність.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num" data-count="2">$2B</span>
+      <span class="stat-label">Оцінка компанії</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">500K+</span>
+      <span class="stat-label">Клієнтів у світі</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">47</span>
+      <span class="stat-label">Країн присутності</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">16</span>
+      <span class="stat-label">Вік засновника</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 2: ПРОБЛЕМА -->
+<section class="slide" id="slide-2">
+  <div class="slide-tag">// Проблема</div>
+  <h2 class="slide-title reveal">Бізнес тоне у рутині.<br>Ми це виправляємо.</h2>
+  <div class="problems-grid reveal">
+    <div class="problem-card">
+      <div class="problem-icon">⏳</div>
+      <div class="problem-title">Час витрачається даремно</div>
+      <div class="problem-desc">80% робочого часу йде на повторювані задачі: звіти, листи, аналіз даних. Це гальмує зріст.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📊</div>
+      <div class="problem-title">Дані є — рішень немає</div>
+      <div class="problem-desc">Компанії тонуть у даних, але не можуть швидко прийняти правильне рішення. Конкуренти обганяють.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">💸</div>
+      <div class="problem-title">ШІ — занадто дорого</div>
+      <div class="problem-desc">Enterprise-рішення коштують мільйони. Малий бізнес не може собі дозволити технологій майбутнього.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 3: РІШЕННЯ -->
+<section class="slide" id="slide-3">
+  <div class="solution-wrap">
+    <div class="solution-text">
+      <div class="slide-tag">// Рішення</div>
+      <h2 class="slide-title reveal">Твій бізнес-мозок<br>на базі ШІ</h2>
+      <ul class="solution-features reveal">
+        <li><div class="check">✓</div><span><strong>NovaMind Brain</strong> — ШІ-асистент що аналізує бізнес в реальному часі та видає готові рішення</span></li>
+        <li><div class="check">✓</div><span><strong>AutoFlow</strong> — автоматизація будь-яких процесів без жодного рядка коду</span></li>
+        <li><div class="check">✓</div><span><strong>DataSense</strong> — перетворює хаотичні дані в зрозумілі інсайти за 3 секунди</span></li>
+        <li><div class="check">✓</div><span><strong>DeployReady</strong> — готово до роботи за 15 хвилин. Жодних IT-спеціалістів</span></li>
+      </ul>
+    </div>
+    <div class="solution-visual reveal">
+      <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
+      <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
+      <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
+      <div class="core">🧠</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 4: ПРОДУКТИ -->
+<section class="slide" id="slide-4">
+  <div class="slide-tag">// Продукти</div>
+  <h2 class="slide-title reveal" style="text-align:center;margin-bottom:48px">Три продукти.<br>Нескінченні можливості.</h2>
+  <div class="products-grid reveal">
+    <div class="product-card">
+      <div class="product-icon">⚡</div>
+      <div class="product-name">NovaMind Starter</div>
+      <div class="product-desc">Для малого бізнесу та стартапів. Базові інструменти автоматизації, аналіз продажів, ШІ-чат-бот.</div>
+      <div class="product-price">$49 / місяць</div>
+    </div>
+    <div class="product-card featured">
+      <div class="product-icon">🚀</div>
+      <div class="product-name">NovaMind Pro</div>
+      <div class="product-desc">Повна автоматизація бізнес-процесів, advanced аналітика, інтеграція з 200+ сервісами, пріоритетна підтримка.</div>
+      <div class="product-price">$299 / місяць</div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">🏢</div>
+      <div class="product-name">NovaMind Enterprise</div>
+      <div class="product-desc">Повне кастомне рішення для великих корпорацій. Персональний ШІ, white-label, SLA 99.99%.</div>
+      <div class="product-price">Від $5000 / місяць</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 5: РИНОК -->
+<section class="slide" id="slide-5">
+  <div class="slide-tag">// Ринок та фінанси</div>
+  <h2 class="slide-title reveal" style="margin-bottom:40px">Ринок на $500B.<br>Ми забираємо своє.</h2>
+  <div class="big-numbers reveal">
+    <div class="big-num-card">
+      <span class="big-num">$47M</span>
+      <div class="big-num-label">Річний виторг (ARR)<br>Зростання 340% за рік</div>
+    </div>
+    <div class="big-num-card">
+      <span class="big-num">500K</span>
+      <div class="big-num-label">Активних бізнесів<br>використовують NovaMind щодня</div>
+    </div>
+    <div class="big-num-card">
+      <span class="big-num">$2B</span>
+      <div class="big-num-label">Остання оцінка компанії<br>Раунд Series B, 2025</div>
+    </div>
+    <div class="big-num-card">
+      <span class="big-num">94%</span>
+      <div class="big-num-label">Retention Rate<br>Клієнти залишаються з нами</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 6: КОМАНДА -->
+<section class="slide" id="slide-6">
+  <div class="slide-tag">// Команда</div>
+  <h2 class="slide-title reveal" style="text-align:center;margin-bottom:48px">Dream Team.<br>Ми будуємо майбутнє.</h2>
+  <div class="team-grid reveal">
+    <div class="team-card">
+      <div class="team-avatar">👑</div>
+      <div class="team-name">Засновник / CEO</div>
+      <div class="team-role">Візіонер. 16 років.<br>Два стартапи до цього.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">💻</div>
+      <div class="team-name">CTO</div>
+      <div class="team-role">Ex-Google. 15 патентів у сфері ML та нейромереж.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">📈</div>
+      <div class="team-name">CMO</div>
+      <div class="team-role">Ex-Meta. Запустила 3 продукти з нуля до $1B.</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">🌐</div>
+      <div class="team-name">COO</div>
+      <div class="team-role">Ex-McKinsey. Побудував операції у 30+ країнах.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 7: ROADMAP -->
+<section class="slide" id="slide-7">
+  <div class="slide-tag">// Дорожня карта</div>
+  <h2 class="slide-title reveal" style="margin-bottom:48px">Куди ми йдемо.<br>Куди йде світ.</h2>
+  <div class="roadmap reveal">
+    <div class="roadmap-item done">
+      <div class="roadmap-left"><div class="roadmap-dot"></div><div class="roadmap-line"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-date">Q1 2024 — ВИКОНАНО ✓</div>
+        <div class="roadmap-title">Запуск NovaMind Brain</div>
+        <div class="roadmap-desc">MVP продукту, перші 1000 клієнтів, залучення $3M seed-раунду від топ інвесторів.</div>
+      </div>
+    </div>
+    <div class="roadmap-item done">
+      <div class="roadmap-left"><div class="roadmap-dot"></div><div class="roadmap-line"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-date">Q4 2024 — ВИКОНАНО ✓</div>
+        <div class="roadmap-title">Вихід на ринок США та Європи</div>
+        <div class="roadmap-desc">100K+ клієнтів, раунд Series A $20M, команда зросла до 80 осіб.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-left"><div class="roadmap-dot"></div><div class="roadmap-line"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-date">Q2 2025 — В ПРОЦЕСІ 🔥</div>
+        <div class="roadmap-title">NovaMind 3.0 + Мобільний додаток</div>
+        <div class="roadmap-desc">Новий движок ШІ, додаток для iOS/Android, партнерство з Fortune 500.</div>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-left"><div class="roadmap-dot"></div></div>
+      <div class="roadmap-content">
+        <div class="roadmap-date">Q1 2026 — ЦІЛЬ 🎯</div>
+        <div class="roadmap-title">IPO на NASDAQ</div>
+        <div class="roadmap-desc">Вихід на біржу з оцінкою $10B. Стати першим українським технологічним юнікорном нового покоління.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SLIDE 8: ПРО МЕНЕ -->
+<section class="slide" id="slide-8">
+  <div class="about-wrap">
+    <div class="about-avatar">👨‍💻</div>
+    <div class="about-info reveal">
+      <div class="about-title-tag">// Засновник та CEO</div>
+      <h2 class="about-name">Смик Андрій</h2>
+      <p class="about-desc">
+        Засновник та CEO NovaMind AI. Почав вчитися програмуванню у <strong style="color:var(--text)">14 років</strong> — і з того дня не було жодної легкої ночі. Поки інші спали, я писав код. Поки інші відпочивали, я вивчав алгоритми, дивився туторіали до 3 ночі та будував перші проєкти. <strong style="color:var(--text)">Роки без сну, зате з мрією.</strong> Сьогодні ця мрія коштує $2 мільярди. Вірю: якщо дуже хотіти і не зупинятись — все можливо.
+      </p>
+      <div class="about-chips">
+        <span class="chip chip-green">Python / JS</span>
+        <span class="chip chip-purple">Machine Learning</span>
+        <span class="chip chip-pink">Не спить з 14 років 😅</span>
+        <span class="chip chip-gold">Чернівці, Україна 🇺🇦</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ===== STARS =====
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const stars = Array.from({length: 180}, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: Math.random() * 1.2 + 0.2,
+    o: Math.random() * 0.6 + 0.2,
+    s: Math.random() * 0.0003 + 0.0001,
+    p: Math.random() * Math.PI * 2
+  }));
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const t = Date.now() * 0.001;
+    stars.forEach(s => {
+      const op = s.o * (0.6 + 0.4 * Math.sin(t * s.s * 1000 + s.p));
+      ctx.beginPath();
+      ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,220,255,${op})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  // ===== SCROLL REVEAL =====
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // stagger children
+        const kids = e.target.children;
+        [...kids].forEach((k, i) => {
+          k.style.transitionDelay = `${i * 0.1}s`;
+        });
+      }
+    });
+  }, { threshold: 0.15 });
+
+  reveals.forEach(r => observer.observe(r));
+
+  // ===== PROGRESS BAR =====
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    progress.style.width = pct + '%';
+    updateDots();
+  });
+
+  // ===== NAV DOTS =====
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.nav-dot');
+
+  function updateDots() {
+    let current = 0;
+    slides.forEach((s, i) => {
+      const rect = s.getBoundingClientRect();
+      if (rect.top < window.innerHeight / 2) current = i;
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function scrollToSlide(i) {
+    slides[i].scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
